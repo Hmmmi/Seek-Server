@@ -61,11 +61,10 @@ public class InterestServlet extends HttpServlet {
 		
 		String id = request.getParameter("phone");
 		
-		List<Interest> interests =InterestDAO.getInterests(id);
+		String interestsCipher =InterestDAO.getInterests(id);
 
 		Gson gson = new Gson();
-		String jsonInterests = gson.toJson(interests);
-		out.println(jsonInterests);
+		out.print(interestsCipher);
 		
 		out.close();
 	}

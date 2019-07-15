@@ -13,8 +13,8 @@ import com.ihbut0.server.utils.ConnectSQL;
 
 public class InterestDAO {
 
-	public static List<Interest> getInterests(String userId) {
-		List<Interest> interests = new ArrayList<Interest>();
+	public static String getInterests(String userId) {
+		String intentCipher = "";
 		Connection conn = ConnectSQL.getConnection();
 		try {
 			PreparedStatement preparedStatement = conn.
@@ -23,14 +23,13 @@ public class InterestDAO {
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			while (rs.next()) {
-				Interest interest = new Interest(rs.getString("intentID"), rs.getString("intentCtx"));
-				interests.add(interest);
+				intentCipher = rs.getString("intentCtx");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		return interests;
+		return intentCipher;
 	}
 	
 	public static boolean saveInterest(String userId, String InterestCipher) {

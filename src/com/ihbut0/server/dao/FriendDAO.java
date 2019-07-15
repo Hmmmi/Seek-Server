@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ihbut0.server.bean.Friend;
+import com.ihbut0.server.bean.User;
 import com.ihbut0.server.utils.ConnectSQL;
 
 public class FriendDAO {
@@ -17,9 +18,8 @@ public class FriendDAO {
 		Connection conn = ConnectSQL.getConnection();
 		try {
 			PreparedStatement preparedStatement = conn.
-					prepareStatement("SELECT * FROM seek_friend WHERE userID =? OR  friendID =? ");
+					prepareStatement("SELECT * FROM seek_friend WHERE userID =?");
 			preparedStatement.setString(1, userId);
-			preparedStatement.setString(2, userId);
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			rs.last();
@@ -27,19 +27,22 @@ public class FriendDAO {
 			
 			while (rs.next()) {
 				Friend friend = null;
-				String friendAccount;
-				String friendLabel;
+				String friendAccount = rs.getString("friendID");
+				String friendLabel = rs.getString("friendLabel");
+				User user = UserDAO.getUser(friendAccount);
 				
-				String id1 = rs.getString("userID");
-				if ( id1.equals(userId) ){
-					friendAccount = rs.getString("friendID");
-					friendLabel = rs.getString("friendLabel");
-				} else {
-					friendAccount = rs.getString("userID");
-					friendLabel = rs.getString("userLabel");
-				}
-				friend = new Friend(friendAccount,friendLabel,(float)rs.getDouble("matchIndex"));
-				friend.setAddTime(rs.getString("addTime"));
+				friend = new Friend();
+				friend.setAccount(friendAccount);
+				friend.setAccount(user.getAccount());
+				friend.setNickname(user.getNickname());
+				friend.setAddress(user.getAddress());
+				friend.setBirthday(user.getBirthday());
+				friend.setEducation(user.getEducation());
+				friend.setHeadImg(user.getHeadImg());
+				friend.setBackground(user.getBackground());
+				friend.setSex(user.getSex());
+				friend.setSign(user.getSign());
+				friend.setLabel(friendLabel);
 				friends.add(friend);
 			}
 		} catch (SQLException e) {
